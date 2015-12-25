@@ -64,6 +64,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BaseSQL\SQL.sql" />
     <Content Include="Dados\Lojas.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
