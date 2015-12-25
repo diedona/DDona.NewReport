@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,12 @@ namespace DDona.NewReport.DataGenerator
     {
         private const int NUM_LOJAS = 10;
         private const int NUM_PRODUTOS = 350;
-        private const int NUM_MAX_GRADES = 8;
+        private const int NUM_MAX_GRADES = 12;
+        private const int NUM_MARCAS = 50;
+
+        private const string CAMINHO_MARCAS = @"Dados\Marcas.txt";
+        private const string CAMINHO_LOJAS = @"Dados\Lojas.txt";
+
         private const string DELETE_ALL = @"
             DELETE FROM GRADE;
             DELETE FROM PRODUTO;
@@ -22,8 +28,12 @@ namespace DDona.NewReport.DataGenerator
             DELETE FROM LOJA;
         ";
 
+        private static IEnumerable<string> MarcasArquivo = null;
+        private static IEnumerable<string> LojasArquivo = null;
+
         static void Main(string[] args)
         {
+            LoadExternalData();
             Console.Write("Delete all: (Y) / (N)");
             string ForceDelete = Console.ReadLine();
 
@@ -40,8 +50,16 @@ namespace DDona.NewReport.DataGenerator
                 CheckGenerateProduto(db);
                 CheckGenerateGrade(db);
 
+                Message("SALVANDO TUDO");
                 db.SaveChanges();
+                Message("SALVANDO TUDO - FIM");
             }
+        }
+
+        private static void LoadExternalData()
+        {
+            MarcasArquivo = File.ReadLines(CAMINHO_MARCAS);
+            LojasArquivo = File.ReadLines(CAMINHO_LOJAS);
         }
 
         private static void CheckDeleteAll(string ForceDelete, NewReportDB db)
@@ -63,10 +81,10 @@ namespace DDona.NewReport.DataGenerator
             if (db.Grade.Count() == 0)
             {
                 Message("GERANDO GRADE");
-                List<Grade> Grades = GenerateGradeData(db.Produto.Local.ToList(), 
+                List<Grade> Grades = GenerateGradeData(db.Produto.Local.ToList(),
                     db.Cor.Local.ToList(),
                     db.Tamanho.Local.ToList());
-                
+
                 db.Grade.AddRange(Grades);
                 try
                 {
@@ -323,19 +341,34 @@ namespace DDona.NewReport.DataGenerator
 
         private static List<Marca> GenerateMarcaData()
         {
-            List<Marca> Marcas = new List<Marca>();
-            Marcas.Add(new Marca() { Nome = "Adidas" });
-            Marcas.Add(new Marca() { Nome = "Aqua" });
-            Marcas.Add(new Marca() { Nome = "Bello" });
-            Marcas.Add(new Marca() { Nome = "Brioni" });
-            Marcas.Add(new Marca() { Nome = "Escada" });
-            Marcas.Add(new Marca() { Nome = "Fendi" });
-            Marcas.Add(new Marca() { Nome = "Hermes" });
-            Marcas.Add(new Marca() { Nome = "Locman" });
-            Marcas.Add(new Marca() { Nome = "Nanet Lepore" });
-            Marcas.Add(new Marca() { Nome = "ZZegna" });
+            if (NUM_MARCAS > MarcasArquivo.Count())
+            {
+                throw new Exception(@"Apenas " + MarcasArquivo.Count() + " marcas disponíveis. Você está pedindo por " +
+                    NUM_MARCAS + ".");
+            }
+
+            List<Marca> Marcas = new List<Marca>(NUM_MARCAS);
+            Random Random = new Random(DateTime.Now.Millisecond);
+            for (int i = 0; i < NUM_MARCAS; i++)
+            {
+                Marca Marca = null;
+                bool MarcaExiste = false;
+
+                do
+                {
+                    Marca = new Marca() { Nome = GetRandomMarcaNome(Random) };
+                    MarcaExiste = Marcas.Exists(x => x.Nome.Equals(Marca.Nome));
+                } while (MarcaExiste);
+
+                Marcas.Add(Marca);
+            }
 
             return Marcas;
+        }
+
+        private static string GetRandomMarcaNome(Random Random)
+        {
+            return MarcasArquivo.ElementAt(Random.Next(0, MarcasArquivo.Count() - 1));
         }
         #endregion
 
@@ -357,19 +390,36 @@ namespace DDona.NewReport.DataGenerator
 
         private static List<Loja> GenerateLojaData()
         {
+            if (NUM_LOJAS > LojasArquivo.Count())
+            {
+                throw new Exception(@"Apenas " + LojasArquivo.Count() + " lojas disponíveis. Você está pedindo por " +
+                    NUM_LOJAS + ".");
+            }
+
             List<Loja> Lojas = new List<Loja>(NUM_LOJAS);
+            Random Random = new Random(DateTime.Now.Millisecond);
             for (int i = 0; i < NUM_LOJAS; i++)
             {
-                Loja Loja = new Loja()
+                Loja Loja = null;
+                bool LojaExiste = false;
+
+                do
                 {
-                    Nome = "Loja " + (i + 1)
-                };
+                    Loja = new Loja() { Nome = GetRandomLojaNome(Random) };
+                    LojaExiste = Lojas.Exists(x => x.Nome.Equals(Loja.Nome));
+                } while (LojaExiste);
 
                 Lojas.Add(Loja);
             }
 
             return Lojas;
         }
+
+        private static string GetRandomLojaNome(Random Random)
+        {
+            return LojasArquivo.ElementAt(Random.Next(0, LojasArquivo.Count() - 1));
+        }
+
         #endregion
 
         private static void Message(string message)
