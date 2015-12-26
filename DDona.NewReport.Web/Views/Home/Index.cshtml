@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<br />
+
+<div class="row">
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Visão WEB</strong>
+            </div>
+            <div class="panel-body text-center">
+                <h1>
+                    <a href="@Url.Action("Report", "Home", new {  })">
+                        <i class="glyphicon glyphicon-eye-open"></i> Ver
+                    </a>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Visão PDF</strong>
+            </div>
+            <div class="panel-body text-center">
+                <h1>
+                    <a href="@Url.Action("ReportPrint", "Home", new { Type = "PDF" })">
+                        <i class="glyphicon glyphicon-file"></i> Abrir
+                    </a>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Visão Excel</strong>
+            </div>
+            <div class="panel-body text-center">
+                <h1>
+                    <a href="@Url.Action("ReportPrint", "Home", new { Type = "Excel" })">
+                        <i class="glyphicon glyphicon-save-file"></i> Abrir
+                    </a>
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
