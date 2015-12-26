@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 
@@ -23,6 +24,13 @@ namespace DDona.NewReport.Web.Controllers
         public ActionResult Report(ReportSearchViewModel Model)
         {
             return PartialView("ReportGroups");
+        }
+
+        [HttpPost]
+        public ActionResult ReportGroupData()
+        {
+            Thread.Sleep(TimeSpan.FromSeconds(5));
+            return PartialView("ReportGroupData");
         }
     }
 }

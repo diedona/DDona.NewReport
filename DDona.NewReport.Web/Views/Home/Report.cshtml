@@ -51,6 +51,26 @@
 
             });
 
+            $(document).on('show.bs.collapse', '.collapse', function (e) {
+
+                var collapse = $(this);
+                var collapseBody = collapse.find('.panel-body');
+                collapseBody.html('WAIT...');
+
+                $.post("@Url.Action("ReportGroupData", "Home")", function (data) {
+                    collapseBody.html(data);
+                });
+
+            });
+
+            $(document).on('hidden.bs.collapse', '.collapse', function (e) {
+
+                var collapse = $(this);
+                var collapseBody = collapse.find('.panel-body');
+                collapseBody.html('');
+
+            });
+
             function SuccessRequest(data)
             {
                 btn.button('reset');
