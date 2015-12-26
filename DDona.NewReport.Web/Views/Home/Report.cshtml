@@ -55,10 +55,20 @@
 
                 var collapse = $(this);
                 var collapseBody = collapse.find('.panel-body');
+                var btnCollapse = collapse.parents('.panel-group').find('.load-group-data');
+                btnCollapse.button('loading');
+
                 collapseBody.html('WAIT...');
 
-                $.post("@Url.Action("ReportGroupData", "Home")", function (data) {
+                var data = {
+                    Marca: collapse.data('marca')
+                }
+
+                $.post("@Url.Action("ReportGroupData", "Home")", data, function (data) {
                     collapseBody.html(data);
+                    btnCollapse.button('reset');
+                }).fail(function (e) {
+                    btnCollapse.button('reset');
                 });
 
             });

@@ -4,14 +4,18 @@
             <strong>MARCA: ABC</strong>
             <strong>TESTE: R$225,00</strong>
             <div class="pull-right">
-                <a class="load-group-data" data-target="#collapseOne" data-toggle="collapse" href="#collapseOne" title="Clique para exibir dados do grupo">
-                    <i class="glyphicon glyphicon-plus-sign"></i> Expandir
-                </a>
+                <button type="button" class="btn btn-sm btn-primary load-group-data" 
+                        data-target="#collapseOne" data-toggle="collapse"
+                        data-loading-text="Aguarde..."
+                        data->
+                    <i class="glyphicon glyphicon-plus-sign"></i>
+                </button>
             </div>
         </div>
-        <div id="collapseOne" class="panel-collapse collapse">
+        <div id="collapseOne" class="panel-collapse collapse" data-marca="ABC">
             <div class="panel-body">
                 @* CONTEÚDO DO GRUPO *@
+                WAIT...
             </div>
         </div>
     </div>

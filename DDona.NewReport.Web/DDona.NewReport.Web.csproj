@@ -115,6 +115,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\ReportGroupSearchDataViewModel.cs" />
     <Compile Include="ViewModel\ReportSearchViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

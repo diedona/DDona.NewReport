@@ -27,10 +27,11 @@ namespace DDona.NewReport.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult ReportGroupData()
+        public ActionResult ReportGroupData(ReportGroupSearchDataViewModel Model)
         {
+            //throw new Exception("a");
             Thread.Sleep(TimeSpan.FromSeconds(5));
-            return PartialView("ReportGroupData");
+            return PartialView("ReportGroupData", Model);
         }
     }
 }
