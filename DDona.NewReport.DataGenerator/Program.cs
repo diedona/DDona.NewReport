@@ -37,23 +37,14 @@ namespace DDona.NewReport.DataGenerator
             Console.Write("Delete all: (Y) / (N)");
             string ForceDelete = Console.ReadLine();
 
-            using (NewReportDB db = new NewReportDB())
-            {
-                db.Database.Log = (x => Debug.WriteLine(x));
+            CheckDeleteAll(ForceDelete);
 
-                CheckDeleteAll(ForceDelete, db);
-
-                CheckGenerateLojaData(db);
-                CheckGenerateMarcaData(db);
-                CheckGenerateTamanho(db);
-                CheckGenerateCor(db);
-                CheckGenerateProduto(db);
-                CheckGenerateGrade(db);
-
-                Message("SALVANDO TUDO");
-                db.SaveChanges();
-                Message("SALVANDO TUDO - FIM");
-            }
+            CheckGenerateLojaData();
+            CheckGenerateMarcaData();
+            CheckGenerateTamanho();
+            CheckGenerateCor();
+            CheckGenerateProduto();
+            CheckGenerateGrade();
         }
 
         private static void LoadExternalData()
@@ -62,11 +53,14 @@ namespace DDona.NewReport.DataGenerator
             LojasArquivo = File.ReadLines(CAMINHO_LOJAS);
         }
 
-        private static void CheckDeleteAll(string ForceDelete, NewReportDB db)
+        private static void CheckDeleteAll(string ForceDelete)
         {
             if (ForceDelete.Equals("Y", StringComparison.InvariantCultureIgnoreCase))
             {
-                db.Database.ExecuteSqlCommand(DELETE_ALL);
+                using (NewReportDB db = new NewReportDB())
+                {
+                    db.Database.ExecuteSqlCommand(DELETE_ALL);
+                }
                 Message("BANCO ZERADO");
             }
             else
@@ -76,28 +70,32 @@ namespace DDona.NewReport.DataGenerator
         }
 
         #region GRADE
-        private static void CheckGenerateGrade(NewReportDB db)
+        private static void CheckGenerateGrade()
         {
-            if (db.Grade.Count() == 0)
+            using (NewReportDB db = new NewReportDB())
             {
-                Message("GERANDO GRADE");
-                List<Grade> Grades = GenerateGradeData(db.Produto.Local.ToList(),
-                    db.Cor.Local.ToList(),
-                    db.Tamanho.Local.ToList());
+                if (db.Grade.Count() == 0)
+                {
+                    Message("GERANDO GRADE");
+                    List<Grade> Grades = GenerateGradeData(db.Produto.ToList(),
+                        db.Cor.ToList(),
+                        db.Tamanho.ToList());
 
-                db.Grade.AddRange(Grades);
-                try
-                {
-                    Message("GRADE GERADA");
+                    db.Grade.AddRange(Grades);
+                    try
+                    {
+                        db.SaveChanges();
+                        Message("GRADE GERADA");
+                    }
+                    catch (Exception e)
+                    {
+                        throw e;
+                    }
                 }
-                catch (Exception e)
+                else
                 {
-                    throw e;
+                    Message("GRADE JÁ EXISTENTE");
                 }
-            }
-            else
-            {
-                Message("GRADE JÁ EXISTENTE");
             }
         }
 
@@ -142,26 +140,30 @@ namespace DDona.NewReport.DataGenerator
         #endregion
 
         #region PRODUTO
-        private static void CheckGenerateProduto(NewReportDB db)
+        private static void CheckGenerateProduto()
         {
-            if (db.Produto.Count() == 0)
+            using (NewReportDB db = new NewReportDB())
             {
-                Message("GERANDO PRODUTO");
-                List<Produto> Produtos = GenerateProdutoData(db.Loja.Local.ToList(), db.Marca.Local.ToList());
-                db.Produto.AddRange(Produtos);
-                try
+                if (db.Produto.Count() == 0)
                 {
-                    Message("PRODUTO GERADO");
-                }
-                catch (Exception e)
-                {
+                    Message("GERANDO PRODUTO");
+                    List<Produto> Produtos = GenerateProdutoData(db.Loja.ToList(), db.Marca.ToList());
+                    db.Produto.AddRange(Produtos);
+                    try
+                    {
+                        db.SaveChanges();
+                        Message("PRODUTO GERADO");
+                    }
+                    catch (Exception e)
+                    {
 
-                    throw e;
+                        throw e;
+                    }
                 }
-            }
-            else
-            {
-                Message("PRODUTO JÁ EXISTENTE");
+                else
+                {
+                    Message("PRODUTO JÁ EXISTENTE");
+                }
             }
         }
 
@@ -256,18 +258,22 @@ namespace DDona.NewReport.DataGenerator
         #endregion
 
         #region COR
-        private static void CheckGenerateCor(NewReportDB db)
+        private static void CheckGenerateCor()
         {
-            if (db.Cor.Count() == 0)
+            using (NewReportDB db = new NewReportDB())
             {
-                Message("GERANDO COR");
-                List<Cor> Cores = GenerateCorData();
-                db.Cor.AddRange(Cores);
-                Message("COR GERADO");
-            }
-            else
-            {
-                Message("COR JÁ EXISTENTE");
+                if (db.Cor.Count() == 0)
+                {
+                    Message("GERANDO COR");
+                    List<Cor> Cores = GenerateCorData();
+                    db.Cor.AddRange(Cores);
+                    db.SaveChanges();
+                    Message("COR GERADO");
+                }
+                else
+                {
+                    Message("COR JÁ EXISTENTE");
+                }
             }
         }
 
@@ -290,18 +296,22 @@ namespace DDona.NewReport.DataGenerator
         #endregion
 
         #region TAMANHO
-        private static void CheckGenerateTamanho(NewReportDB db)
+        private static void CheckGenerateTamanho()
         {
-            if (db.Tamanho.Count() == 0)
+            using (NewReportDB db = new NewReportDB())
             {
-                Message("GERANDO TAMANHO");
-                List<Tamanho> Tamanhos = GenerateTamanhoData();
-                db.Tamanho.AddRange(Tamanhos);
-                Message("TAMANHO GERADO");
-            }
-            else
-            {
-                Message("TAMANHO JÁ EXISTENTE");
+                if (db.Tamanho.Count() == 0)
+                {
+                    Message("GERANDO TAMANHO");
+                    List<Tamanho> Tamanhos = GenerateTamanhoData();
+                    db.Tamanho.AddRange(Tamanhos);
+                    db.SaveChanges();
+                    Message("TAMANHO GERADO");
+                }
+                else
+                {
+                    Message("TAMANHO JÁ EXISTENTE");
+                }
             }
         }
 
@@ -324,18 +334,22 @@ namespace DDona.NewReport.DataGenerator
         #endregion
 
         #region MARCA
-        private static void CheckGenerateMarcaData(NewReportDB db)
+        private static void CheckGenerateMarcaData()
         {
-            if (db.Marca.Count() == 0)
+            using (NewReportDB db = new NewReportDB())
             {
-                Message("GERANDO MARCA");
-                List<Marca> Marcas = GenerateMarcaData();
-                db.Marca.AddRange(Marcas);
-                Message("MARCA GERADA");
-            }
-            else
-            {
-                Message("MARCA JÁ EXISTENTE");
+                if (db.Marca.Count() == 0)
+                {
+                    Message("GERANDO MARCA");
+                    List<Marca> Marcas = GenerateMarcaData();
+                    db.Marca.AddRange(Marcas);
+                    db.SaveChanges();
+                    Message("MARCA GERADA");
+                }
+                else
+                {
+                    Message("MARCA JÁ EXISTENTE");
+                }
             }
         }
 
@@ -373,18 +387,22 @@ namespace DDona.NewReport.DataGenerator
         #endregion
 
         #region LOJA
-        private static void CheckGenerateLojaData(NewReportDB db)
+        private static void CheckGenerateLojaData()
         {
-            if (db.Loja.Count() == 0)
+            using (NewReportDB db = new NewReportDB())
             {
-                Message("GERANDO LOJA");
-                List<Loja> Lojas = GenerateLojaData();
-                db.Loja.AddRange(Lojas);
-                Message("LOJA GERADA");
-            }
-            else
-            {
-                Message("LOJA JÁ EXISTENTE");
+                if (db.Loja.Count() == 0)
+                {
+                    Message("GERANDO LOJA");
+                    List<Loja> Lojas = GenerateLojaData();
+                    db.Loja.AddRange(Lojas);
+                    db.SaveChanges();
+                    Message("LOJA GERADA");
+                }
+                else
+                {
+                    Message("LOJA JÁ EXISTENTE");
+                }
             }
         }
 
