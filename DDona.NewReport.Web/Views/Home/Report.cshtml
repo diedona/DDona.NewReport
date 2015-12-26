@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Report";
+}
+
+<br />
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home")">Home</a></li>
+    <li class="active">Report</li>
+</ol>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Formulário</strong>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("Report", "Home", FormMethod.Post, new { @class = "form", id = "frmReport" }))
+                {
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <button type="submit" class="btn btn-default" id="btnSearch" data-loading-text="Aguarde...">
+                                <i class="glyphicon glyphicon-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ReportPlace"></div>
+
+@section scripts {
+    <script>
+        $(function () {
+
+            var frm = $("#frmReport");
+            var rpt = $("#ReportPlace");
+            var btn = $("#btnSearch");
+            frm.on('submit', function (e) {
+
+                e.preventDefault();
+                var url = frm.prop('action');
+                var data = frm.serialize();
+                btn.button('loading');
+                $.post(url, data, SuccessRequest)
+                    .fail(FailRequest);
+
+            });
+
+            function SuccessRequest(data)
+            {
+                btn.button('reset');
+                rpt.html(data);
+            }
+
+            function FailRequest(data)
+            {
+                btn.button('reset');
+                console.log(data);
+            }
+
+        });
+    </script>
+}

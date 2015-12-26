@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DDona.NewReport.Web.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,18 +14,15 @@ namespace DDona.NewReport.Web.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Report()
         {
-            ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
-        public ActionResult Contact()
+        [HttpPost]
+        public ActionResult Report(ReportSearchViewModel Model)
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return PartialView("ReportGroups");
         }
     }
 }
