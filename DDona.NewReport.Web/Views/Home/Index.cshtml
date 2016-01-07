@@ -13,7 +13,7 @@
             <div class="panel-body text-center">
                 <h1>
                     <a href="@Url.Action("Report", "Home", new {  })">
-                        <i class="glyphicon glyphicon-eye-open"></i> Ver
+                        <i class="glyphicon glyphicon-eye-open"></i> Accordion
                     </a>
                 </h1>
             </div>
@@ -44,6 +44,23 @@
                 <h1>
                     <a href="@Url.Action("ReportPrint", "Home", new { Type = "Excel" })">
                         <i class="glyphicon glyphicon-save-file"></i> Abrir
+                    </a>
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>Visão Web</strong>
+            </div>
+            <div class="panel-body text-center">
+                <h1>
+                    <a href="@Url.Action("Index", "DataTable", new { Type = "" })">
+                        <i class="glyphicon glyphicon-eye-open"></i> DataTable
                     </a>
                 </h1>
             </div>
