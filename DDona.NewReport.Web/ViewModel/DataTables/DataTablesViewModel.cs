@@ -13,5 +13,12 @@ namespace DDona.NewReport.Web.ViewModel.DataTables
         public int start { get; set; }
         public int length { get; set; }
         public DataTableSearch search { get; set; }
+        public int skip
+        {
+            get
+            {
+                return (length * start);
+            }
+        }
     }
 }
