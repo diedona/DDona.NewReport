@@ -1,8 +1,8 @@
-﻿function MontarTabela(TabelaId, Colunas, Url)
+﻿function MontarTabela(TabelaId, Colunas, Url, Parametros)
 {
     var TabelaHtml = $("#" + TabelaId);
     DestruirTabela(TabelaId);
-    return ConfigurarTabela(TabelaHtml, Colunas, Url);
+    return ConfigurarTabela(TabelaHtml, Colunas, Url, Parametros);
 }
 
 function DestruirTabela(TabelaId)
@@ -14,7 +14,7 @@ function DestruirTabela(TabelaId)
     }
 }
 
-function ConfigurarTabela(TabelaHtml, Colunas, Url)
+function ConfigurarTabela(TabelaHtml, Colunas, Url, Parametros)
 {
     var DataTable;
 
@@ -24,7 +24,14 @@ function ConfigurarTabela(TabelaHtml, Colunas, Url)
         "columns": Colunas,
         "ajax": {
             "url": Url,
-            "type": "POST"
+            "type": "POST",
+            "data": function (d) {
+                for(var i = 0; i < Parametros.length; i++)
+                {
+                    var Parametro = Parametros[i];
+                    d[Parametro.name] = Parametro.value;
+                }
+            }
         }
     });
 
