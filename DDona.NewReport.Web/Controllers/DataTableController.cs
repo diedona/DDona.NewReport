@@ -1,4 +1,5 @@
 ﻿using DDona.NewReport.Web.Models.FakeModel;
+using DDona.NewReport.Web.ViewModel;
 using DDona.NewReport.Web.ViewModel.DataTables;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace DDona.NewReport.Web.Controllers
             return View();
         }
 
-        public JsonResult ReportJson(DataTablesViewModel Model)
+        public JsonResult ReportJson(RelatoroDataTablesViewModel Model)
         {
             DataTableReturn Return = new DataTableReturn();
             Return.draw = Model.draw;
@@ -29,12 +30,17 @@ namespace DDona.NewReport.Web.Controllers
             return Json(Return);
         }
 
-        private List<Grupo> FilterData(List<Grupo> Grupos, DataTablesViewModel Model)
+        private List<Grupo> FilterData(List<Grupo> Grupos, RelatoroDataTablesViewModel Model)
         {
             int ColumnIdx = Model.order.FirstOrDefault().column;
             string OrderColumn = Model.columns.ElementAt(ColumnIdx).name;
 
-            return Grupos.OrderBy(x => x.Estado).Skip(Model.start).Take(Model.length).ToList();
+            return Grupos.Where(x => (Model.Status == null) || Model.Status.Contains(x.Status))
+                .Where(x => (string.IsNullOrWhiteSpace(Model.Estado)) || x.Estado.Equals(Model.Estado))
+                .OrderBy(x => x.Estado)
+                .Skip(Model.start)
+                .Take(Model.length)
+                .ToList();
         }
 
         private List<Grupo> FakeGrupoData()

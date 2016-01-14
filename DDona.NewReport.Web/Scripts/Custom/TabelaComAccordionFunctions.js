@@ -25,15 +25,25 @@ function ConfigurarTabela(TabelaHtml, Colunas, Url, Parametros)
         "ajax": {
             "url": Url,
             "type": "POST",
-            "data": function (d) {
-                for(var i = 0; i < Parametros.length; i++)
-                {
-                    var Parametro = Parametros[i];
-                    d[Parametro.name] = Parametro.value;
-                }
-            }
+            "data": ArrayToObject(Parametros)
         }
     });
 
     return DataTable;
+}
+
+function ArrayToObject(Obj)
+{
+    var o = {};
+    $.each(Obj, function () {
+        if (o[this.name]) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
 }

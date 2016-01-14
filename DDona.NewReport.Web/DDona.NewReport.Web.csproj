@@ -124,6 +124,7 @@
     <Compile Include="ViewModel\DataTables\DataTableReturn.cs" />
     <Compile Include="ViewModel\DataTables\DataTableSearch.cs" />
     <Compile Include="ViewModel\DataTables\DataTablesViewModel.cs" />
+    <Compile Include="ViewModel\RelatoroDataTablesViewModel.cs" />
     <Compile Include="ViewModel\ReportGroupSearchDataViewModel.cs" />
     <Compile Include="ViewModel\ReportSearchViewModel.cs" />
   </ItemGroup>
